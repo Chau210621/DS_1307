@@ -1,0 +1,106 @@
+C51 COMPILER V9.01   MAIN                                                                  04/21/2023 22:13:56 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) OBJECT(.\Obj
+                    -ects\main.obj)
+
+line level    source
+
+   1          #include"main.h"
+   2          #include"..\lib\Soft_I2c.h"
+   3          //#include"..\lib\Lcd4.h"
+   4          #include"..\lib\Rtc_Ds1307.h"
+   5          #include"Port.h"
+   6          
+   7          
+   8          char so[]= {0x40, 0x79,0x24,0x30,0x19,0x12,0x02,0x78,0x00,0x10};
+   9          char Maquet[] = {0xbf, 0xdf, 0xef, 0xf7, 0xfb, 0xfd, 0x7e};
+  10          unsigned char chuSo[7];
+  11          unsigned long dem, temp, i;
+  12          
+  13          void delay(int time){
+  14   1              while(time--);
+  15   1      }
+  16          
+  17          void main()
+  18          {
+  19   1              unsigned char Hour, Minute, Second, old_second, Mode;
+  20   1      
+  21   1              Soft_I2c_Init();
+  22   1              Ds1307_Init();
+  23   1              //Lcd_Init();
+  24   1      
+  25   1              while(1)
+  26   1              {
+  27   2                      Ds1307_Read_Time(&Hour, &Minute, &Second, &Mode);
+  28   2                      // Tra ve so co so 10 nen phai cong cho 0x30 de thanh ma ASCI
+  29   2              
+  30   2                                      P3_5 = 0;
+  31   2                                      P0 = so[Second%10];
+  32   2                                      delay(5);
+  33   2                                      P3_5 = 1;
+  34   2                      
+  35   2                                      P3_4 = 0;
+  36   2                                      P0 = so[Second/10];
+  37   2                                      delay(5);
+  38   2                                      P3_4 = 1;
+  39   2      
+  40   2                                      P3_3 = 0;
+  41   2                                      P0 = so[Minute%10];
+  42   2                                      delay(5);
+  43   2                                      P3_3 = 1;
+  44   2                      
+  45   2                                      P3_2 = 0;
+  46   2                                      P0 = so[Minute/10];
+  47   2                                      delay(5);
+  48   2                                      P3_2 = 1;
+  49   2      
+  50   2                                      P3_1 = 0;
+  51   2                                      P0 = so[Hour%10];
+  52   2                                      delay(5);
+  53   2                                      P3_1 = 1;
+  54   2                      
+C51 COMPILER V9.01   MAIN                                                                  04/21/2023 22:13:56 PAGE 2   
+
+  55   2                                      P3_0 = 0;
+  56   2                                      P0 = so[Hour/10];
+  57   2                                      delay(5);
+  58   2                                      P3_0 = 1;
+  59   2      
+  60   2                              
+  61   2                              /*
+  62   2                              Lcd_Chr(1,5,Hour/10+0x30);
+  63   2                              Lcd_Chr_Cp(Hour%10+0x30);
+  64   2                              Lcd_Chr_Cp(':');
+  65   2                              Lcd_Chr_Cp(Minute/10+0x30);
+  66   2                              Lcd_Chr_Cp(Minute%10+0x30);
+  67   2                              Lcd_Chr_Cp(':');
+  68   2                              Lcd_Chr_Cp(Second/10+0x30);
+  69   2                              Lcd_Chr_Cp(Second%10+0x30);
+  70   2                              */
+  71   2                              //PCON |= 0x01;
+  72   2                              
+  73   2                      
+  74   2                      
+  75   2      
+  76   2              }
+  77   1      }
+*** WARNING C280 IN LINE 19 OF MAIN.C: 'old_second': unreferenced local variable
+  78          
+  79          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    144    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     36       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
